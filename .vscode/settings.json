@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "qtnetwork": "cpp",
+        "qobject": "cpp",
+        "*.tcc": "cpp",
+        "list": "cpp"
+    }
+}
