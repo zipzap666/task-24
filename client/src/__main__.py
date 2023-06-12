@@ -16,10 +16,10 @@ if __name__ == "__main__":
     msg1.fast_response.current_date_time = "10"
     msg2.slow_response.connected_client_count = 10
     msg3.request_for_fast_response.SetInParent()
-    msg4.request_for_slow_response.time_in_seconds_to_sleep = 10
+    msg4.request_for_slow_response.time_in_seconds_to_sleep = 5
     
-    messages = _VarintBytes(msg1.ByteSize()) + msg1.SerializeToString()
-    messages += _VarintBytes(msg2.ByteSize()) + msg2.SerializeToString()
+    messages = _VarintBytes(msg3.ByteSize()) + msg3.SerializeToString()
+    messages += _VarintBytes(msg4.ByteSize()) + msg4.SerializeToString()
     messages += _VarintBytes(msg3.ByteSize()) + msg3.SerializeToString()
     messages += _VarintBytes(msg4.ByteSize()) + msg4.SerializeToString()
 
@@ -30,7 +30,13 @@ if __name__ == "__main__":
         # Send data
         message = 'This is the message.  It will be repeated.'
         sock.sendall(messages)
-        data = sock.recv(16)
+        data = sock.recv(32)
+        print(data)
+        data = sock.recv(32)
+        print(data)
+        data = sock.recv(32)
+        print(data)
+        data = sock.recv(32)
         print(data)
     finally:
         sock.close()

@@ -26,4 +26,5 @@ set(QT_LIBS
 )
 
 target_link_libraries(parser PUBLIC proto)
-target_link_libraries(server PRIVATE ${QT_LIBS} parser)
+target_link_libraries(server PUBLIC proto)
+target_link_libraries(server PRIVATE ${QT_LIBS})
