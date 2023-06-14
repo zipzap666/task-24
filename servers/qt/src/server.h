@@ -4,6 +4,7 @@
 #include <QDateTime>
 #include <QTimer>
 
+#include "common/Logger.h"
 #include "parser/parsTools.h"
 #include "proto/message.pb.h"
 
@@ -11,7 +12,7 @@ class Server : public QObject
 {
     Q_OBJECT
 public:
-    Server(QObject *parent = nullptr);
+    Server(int port = 33333, std::shared_ptr<Logger> logger = nullptr, QObject *parent = nullptr);
 
     ~Server();
 
@@ -22,18 +23,20 @@ public slots:
 
     void write(QByteArray msg, int idusersocs);
 
-    void fastResponse(std::shared_ptr<const TestTask::Messages::WrapperMessage> msg, int idusersocs);
-    void slowResponse(std::shared_ptr<const TestTask::Messages::WrapperMessage> msg, int idusersocs);
+    void onFastResponse(std::shared_ptr<const TestTask::Messages::WrapperMessage> msg, int idusersocs);
+    void onSlowResponse(std::shared_ptr<const TestTask::Messages::WrapperMessage> msg, int idusersocs);
 
 signals:
     void readyToWrite(QByteArray msg, int idusersocs);
-    void readyFastResponse(std::shared_ptr<const TestTask::Messages::WrapperMessage> msg, int idusersocs);
-    void readySlowResponse(std::shared_ptr<const TestTask::Messages::WrapperMessage> msg, int idusersocs);
+    void fastResponse(std::shared_ptr<const TestTask::Messages::WrapperMessage> msg, int idusersocs);
+    void slowResponse(std::shared_ptr<const TestTask::Messages::WrapperMessage> msg, int idusersocs);
 
 private:
+    int port;
+    std::shared_ptr<Logger> logger;
     QTcpServer *server;
     int server_status;
-    //void resetTimer(int idusersocs);
+    int connectionCount;
     QMap<int, QTcpSocket *> Sockets;
     QMap<int, QTimer *> timers;
     QMap<int, DelimitedMessagesStreamParser<TestTask::Messages::WrapperMessage> *> parsers; 

@@ -19,12 +19,22 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Network REQUIRED)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/proto)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/parser)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/common)
 
 set(QT_LIBS
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Network
 )
 
+set(PROJECT_LIBS
+    settings
+    logger
+    proto
+    parser
+)
+
 target_link_libraries(parser PUBLIC proto)
-target_link_libraries(server PUBLIC proto)
+target_link_libraries(logger PRIVATE Qt${QT_VERSION_MAJOR}::Core)
+target_link_libraries(settings PRIVATE Qt${QT_VERSION_MAJOR}::Core)
+target_link_libraries(server PUBLIC ${PROJECT_LIBS})
 target_link_libraries(server PRIVATE ${QT_LIBS})

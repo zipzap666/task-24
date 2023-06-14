@@ -61,7 +61,8 @@
         "thread": "cpp",
         "cinttypes": "cpp",
         "typeinfo": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "qfile": "cpp"
     },
     "cmake.sourceDirectory": "/home/zip/dev/task-24/servers/qt"
 }
