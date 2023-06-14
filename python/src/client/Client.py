@@ -1,9 +1,13 @@
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, QTimer
 from PyQt5.QtNetwork import QTcpSocket
-
-from parser.parsTools import *
-from proto.message_pb2 import WrapperMessage
 from google.protobuf.internal.encoder import _VarintBytes
+
+import sys
+from os.path import dirname, join, abspath
+sys.path.insert(0, abspath(join(dirname(__file__), '..')))
+
+from common.parser.parsTools import *
+from common.proto.message_pb2 import WrapperMessage
 
 
 class Client(QObject):
@@ -48,6 +52,7 @@ class Client(QObject):
 
     def reconnect(self):
         if self.iterations >= self.timeOut:
+            self.socket.close()
             self.reconnectTimer.stop()
         else:
             self.logGui.emit(f"INFO: TRY TO RECONNECT TO {self.address}:{self.port} ATTEMP: {self.iterations + 1}")
@@ -62,6 +67,9 @@ class Client(QObject):
         
     @pyqtSlot(int)
     def sendFastRequest(self, time):
+        if not self.socket.isOpen():
+            return
+        self.stopSending()
         self.logGui.emit(f"INFO: START SENDING RESPONSE FOR FAST REQUEST")
         if not self.socket.isOpen():
             return
@@ -80,6 +88,9 @@ class Client(QObject):
 
     @pyqtSlot(int, int)
     def sendSlowRequest(self, timeToSleep, time):
+        if not self.socket.isOpen():
+            return
+        self.stopSending()
         self.logGui.emit(f"INFO: START SENDING RESPONSE FOR SLOW REQUEST")
         if not self.socket.isOpen():
             return

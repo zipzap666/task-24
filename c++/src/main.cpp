@@ -1,4 +1,5 @@
 #include <QCoreApplication>
+
 #include "server.h"
 #include "common/SettingsManagement.h"
 #include "common/Logger.h"

@@ -17,8 +17,8 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Network REQUIRED)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src)
-add_subdirectory(${CMAKE_SOURCE_DIR}/src/proto)
-add_subdirectory(${CMAKE_SOURCE_DIR}/src/parser)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/common/proto)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/common/parser)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/common)
 
 set(QT_LIBS

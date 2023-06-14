@@ -20,6 +20,7 @@ def GenProto(source, require=True):
         return
 
     output = source.replace('.proto', '_pb2.py').replace('../src/', '')
+    print(output)
 
     if (not os.path.exists(output) or
         (os.path.exists(source) and
@@ -41,7 +42,7 @@ def GenProto(source, require=True):
             sys.exit(-1)
 
 
-src = ['src/proto/message.proto']
+src = ['src/common/proto/message.proto']
 
 
 class BuildPyCmd(_build_py):

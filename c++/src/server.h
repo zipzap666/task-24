@@ -5,8 +5,8 @@
 #include <QTimer>
 
 #include "common/Logger.h"
-#include "parser/parsTools.h"
-#include "proto/message.pb.h"
+#include "common/parser/parsTools.h"
+#include "common/proto/message.pb.h"
 
 class Server : public QObject
 {
