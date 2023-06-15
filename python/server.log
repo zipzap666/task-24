@@ -1,0 +1,32 @@
+2023-06-15 11:25:38,525 - asyncio - DEBUG - Using selector: EpollSelector
+2023-06-15 11:27:33,380 - asyncio - DEBUG - Using selector: EpollSelector
+2023-06-15 11:27:39,963 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-4' coro=<Server.handle_read() done, defined at /home/zip/dev/task-24/python/src/server/Server.py:24> exception=TypeError("object bytes can't be used in 'await' expression")>
+Traceback (most recent call last):
+  File "/home/zip/dev/task-24/python/src/server/Server.py", line 42, in handle_read
+    message = await self.fastResponse()
+TypeError: object bytes can't be used in 'await' expression
+2023-06-15 11:27:50,909 - asyncio - DEBUG - Using selector: EpollSelector
+2023-06-15 11:27:54,531 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-4' coro=<Server.handle_read() done, defined at /home/zip/dev/task-24/python/src/server/Server.py:24> exception=TypeError("object bytes can't be used in 'await' expression")>
+Traceback (most recent call last):
+  File "/home/zip/dev/task-24/python/src/server/Server.py", line 42, in handle_read
+    message = await self.fastResponse()
+TypeError: object bytes can't be used in 'await' expression
+2023-06-15 11:28:10,759 - asyncio - DEBUG - Using selector: EpollSelector
+2023-06-15 11:29:41,203 - asyncio - DEBUG - Using selector: EpollSelector
+2023-06-15 11:29:48,813 - root - INFO - CLIENT CONNECTED
+2023-06-15 11:29:55,172 - root - INFO - CLIENT DISCONNECTED
+2023-06-15 11:30:47,085 - asyncio - DEBUG - Using selector: EpollSelector
+2023-06-15 11:30:51,412 - root - INFO - CLIENT CONNECTED
+2023-06-15 11:31:03,470 - root - INFO - CLIENT DISCONNECTED
+2023-06-15 11:31:04,089 - asyncio - DEBUG - Using selector: EpollSelector
+2023-06-15 11:31:05,533 - root - INFO - CLIENT CONNECTED
+2023-06-15 11:31:56,141 - root - INFO - CLIENT DISCONNECTED
+2023-06-15 11:31:56,928 - asyncio - DEBUG - Using selector: EpollSelector
+2023-06-15 11:32:00,041 - root - INFO - CLIENT 59520 CONNECTED
+2023-06-15 11:32:13,195 - root - INFO - CLIENT 59520 DISCONNECTED
+2023-06-15 11:32:32,214 - root - INFO - CLIENT 57128 CONNECTED
+2023-06-15 11:32:33,895 - root - INFO - CLIENT 57140 CONNECTED
+2023-06-15 11:32:53,605 - root - INFO - CLIENT 57128 DISCONNECTED
+2023-06-15 11:32:56,830 - root - INFO - CLIENT 57140 DISCONNECTED

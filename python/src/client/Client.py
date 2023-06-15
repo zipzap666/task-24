@@ -5,9 +5,8 @@ from google.protobuf.internal.encoder import _VarintBytes
 import sys
 from os.path import dirname, join, abspath
 sys.path.insert(0, abspath(join(dirname(__file__), '..')))
-
-from common.parser.parsTools import *
 from common.proto.message_pb2 import WrapperMessage
+from common.parser.parsTools import *
 
 
 class Client(QObject):
@@ -18,12 +17,11 @@ class Client(QObject):
         self.socket.connected.connect(self.onConnected)
         self.socket.readyRead.connect(self.onReadyRead)
         self.socket.disconnected.connect(self.startReconnect)
+
         self.timeOut = 0
         self.iterations = 0
         self.reconnectTimer = QTimer()
         self.reconnectTimer.timeout.connect(self.reconnect)
-        self.address = ''
-        self.port = 0
 
         self.timerSlow = QTimer()
         self.timerSlow.timeout.connect(self.onSendSlowRequest)
@@ -31,6 +29,9 @@ class Client(QObject):
 
         self.timerFast = QTimer()
         self.timerFast.timeout.connect(self.onSendFastRequest)
+
+        self.address = ''
+        self.port = 0
 
     messageParsed = pyqtSignal(str, arguments=['message'])
     logGui = pyqtSignal(str, arguments=['message'])
@@ -55,16 +56,18 @@ class Client(QObject):
             self.socket.close()
             self.reconnectTimer.stop()
         else:
-            self.logGui.emit(f"INFO: TRY TO RECONNECT TO {self.address}:{self.port} ATTEMP: {self.iterations + 1}")
+            self.logGui.emit(
+                f"INFO: TRY TO RECONNECT TO {self.address}:{self.port} ATTEMP: {self.iterations + 1}")
             self.iterations += 1
             self.connect()
 
     def startReconnect(self):
         self.stopSending()
-        self.logGui.emit(f"INFO: CONNECTION LOST WITH {self.address}:{self.port}")
+        self.logGui.emit(
+            f"INFO: CONNECTION LOST WITH {self.address}:{self.port}")
         self.iterations = 0
         self.reconnectTimer.start(1000)
-        
+
     @pyqtSlot(int)
     def sendFastRequest(self, time):
         if not self.socket.isOpen():
@@ -75,13 +78,14 @@ class Client(QObject):
             return
         if time < 10:
             time = 10
-        
+
         self.timerFast.start(time)
 
     def onSendFastRequest(self):
         wrapperMessage = WrapperMessage()
         wrapperMessage.request_for_fast_response.SetInParent()
-        message = _VarintBytes(wrapperMessage.ByteSize()) + wrapperMessage.SerializeToString()
+        message = _VarintBytes(wrapperMessage.ByteSize()) + \
+            wrapperMessage.SerializeToString()
 
         self.socket.write(message)
         self.logGui.emit(f"INFO: SENDED RESPONSE FOR FAST REQUEST")
@@ -96,14 +100,15 @@ class Client(QObject):
             return
         if time < 10:
             time = 10
-        
+
         self.timeToSleep = timeToSleep
         self.timerSlow.start(time)
 
     def onSendSlowRequest(self):
         wrapperMessage = WrapperMessage()
         wrapperMessage.request_for_slow_response.time_in_seconds_to_sleep = self.timeToSleep
-        message = _VarintBytes(wrapperMessage.ByteSize()) + wrapperMessage.SerializeToString()
+        message = _VarintBytes(wrapperMessage.ByteSize()) + \
+            wrapperMessage.SerializeToString()
 
         self.socket.write(message)
         self.logGui.emit(f"INFO: SENDED RESPONSE FOR SLOW REQUEST")
@@ -120,6 +125,8 @@ class Client(QObject):
         data = self.parser.parse(message)
         for item in data:
             if item.HasField("slow_response"):
-                self.messageParsed.emit(str(item.slow_response.connected_client_count))
+                self.messageParsed.emit(
+                    str(item.slow_response.connected_client_count))
             elif item.HasField("fast_response"):
-                self.messageParsed.emit(str(item.fast_response.current_date_time))
+                self.messageParsed.emit(
+                    str(item.fast_response.current_date_time))
