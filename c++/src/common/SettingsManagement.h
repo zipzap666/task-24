@@ -5,7 +5,6 @@
 #include <QFile>
 #include <utility>
 
-
 namespace SettingsManagement
 {
     inline std::pair<int, int> loadSettings(QString path = "config.ini")
@@ -38,4 +37,4 @@ namespace SettingsManagement
     }
 };
 
-#endif //SETTINGS_MANAGEMENT_H
+#endif // SETTINGS_MANAGEMENT_H

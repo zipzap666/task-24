@@ -39,5 +39,5 @@ private:
     int connectionCount;
     QMap<int, QTcpSocket *> Sockets;
     QMap<int, QTimer *> timers;
-    QMap<int, DelimitedMessagesStreamParser<TestTask::Messages::WrapperMessage> *> parsers; 
+    QMap<int, DelimitedMessagesStreamParser<TestTask::Messages::WrapperMessage> *> parsers;
 };

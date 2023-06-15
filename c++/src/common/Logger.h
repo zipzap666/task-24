@@ -15,27 +15,25 @@ enum Level
     LOG_DEBUG
 };
 
-
 class Logger : public QObject
 {
     Q_OBJECT
-public: 
+public:
     Logger(){};
-    Logger(QString filePath, int level) :
-    filePath(filePath), curentLevel(level){};
+    Logger(QString filePath, int level) : filePath(filePath), curentLevel(level){};
 
-    void setPath(QString s){filePath = s;};
-    void setLevel(int level){curentLevel = level;}
-    
-    QString getPath(){return filePath;};
-    int getLevel(){return curentLevel;};
+    void setPath(QString s) { filePath = s; };
+    void setLevel(int level) { curentLevel = level; }
+
+    QString getPath() { return filePath; };
+    int getLevel() { return curentLevel; };
 
     inline void log(int level, QString msg)
     {
-        if(level > curentLevel)
+        if (level > curentLevel)
             return;
 
-        if(!fileIsOk())
+        if (!fileIsOk())
             return;
 
         QTextStream out(&logFile);
@@ -46,7 +44,7 @@ public:
         case LOG_ERR:
             out << "ERROR: " << msg << "\n";
             break;
-        
+
         case LOG_WARN:
             out << "WARNING: " << msg << "\n";
             break;
@@ -58,7 +56,7 @@ public:
         case LOG_DEBUG:
             out << "DEBUG: " << msg << "\n";
             break;
-        
+
         default:
             out << "ANY: " << msg << "\n";
             break;
@@ -68,17 +66,17 @@ public:
 private:
     bool fileIsOk()
     {
-        if(!logFile.isOpen())
+        if (!logFile.isOpen())
         {
             logFile.setFileName(filePath);
-            if(logFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
+            if (logFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
                 return true;
         }
         else if (logFile.fileName() != filePath)
         {
             logFile.close();
             logFile.setFileName(filePath);
-            if(logFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
+            if (logFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
                 return true;
         }
         else

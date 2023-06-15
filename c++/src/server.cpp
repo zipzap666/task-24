@@ -2,7 +2,7 @@
 
 const char timeFormat[] = "yyyyMMddThhmmss.zzz";
 
-Server::Server(int port, std::shared_ptr<Logger> logger, QObject *parent) 
+Server::Server(int port, std::shared_ptr<Logger> logger, QObject *parent)
     : port(port), logger(std::move(logger))
 {
     server = new QTcpServer(this);
@@ -13,12 +13,11 @@ Server::Server(int port, std::shared_ptr<Logger> logger, QObject *parent)
     connect(this, &Server::readyToWrite, this, &Server::write);
     if (!server->listen(QHostAddress::Any, port) && server_status == 0)
     {
-        //qDebug() << QObject::tr("Unable to start the server: %1.").arg(server->errorString());
+        logger->log(Level::LOG_ERR, "Server didn`t start!!!");
     }
     else
     {
         server_status = 1;
-        //qDebug() << QString::fromUtf8("Сервер запущен!");
     }
 }
 
@@ -42,11 +41,10 @@ void Server::newConnection()
         Sockets[idusersocs] = clientSocket;
         timers[idusersocs] = nullptr;
         connect(clientSocket, &QTcpSocket::disconnected, this, [this, idusersocs]()
-        {
+                {
             connectionCount--;
             logger->log(Level::LOG_INFO, "Disconnected id: " + QString::number(idusersocs));
-            delete parsers[idusersocs];
-        });
+            delete parsers[idusersocs]; });
         connect(Sockets[idusersocs], SIGNAL(readyRead()), this, SLOT(read()));
     }
 }
@@ -56,7 +54,7 @@ void Server::read()
     QTcpSocket *clientSocket = (QTcpSocket *)sender();
     int idusersocs = clientSocket->socketDescriptor();
     QByteArray message = clientSocket->readAll();
-    //qDebug() << message;
+
     foreach (const char byte, message)
     {
         const auto &parsedMessages = parsers[idusersocs]->parse(std::string(1, byte));
@@ -87,7 +85,6 @@ void Server::onFastResponse(std::shared_ptr<const TestTask::Messages::WrapperMes
     }
 
     TestTask::Messages::WrapperMessage response;
-    //qDebug() << QDateTime::currentDateTime().toString(timeFormat);
     *response.mutable_fast_response()->mutable_current_date_time() = QDateTime::currentDateTime().toString(timeFormat).toStdString();
     auto serializedData = serializeDelimited<TestTask::Messages::WrapperMessage>(response);
     emit readyToWrite(QByteArray(serializedData->data(), serializedData->size()), idusersocs);
@@ -102,7 +99,8 @@ void Server::onSlowResponse(std::shared_ptr<const TestTask::Messages::WrapperMes
             connect(&*timers[idusersocs], &QTimer::timeout, [this, msg, idusersocs]()
                     { onSlowResponse(msg, idusersocs); });
             return;
-        }else
+        }
+        else
         {
             timers[idusersocs]->deleteLater();
         }
@@ -110,22 +108,18 @@ void Server::onSlowResponse(std::shared_ptr<const TestTask::Messages::WrapperMes
     timers[idusersocs] = new QTimer();
     timers[idusersocs]->setSingleShot(true);
     timers[idusersocs]->setInterval(msg->request_for_slow_response().time_in_seconds_to_sleep());
-    int connectionCount = this->connectionCount; 
+    int connectionCount = this->connectionCount;
     connect(&*timers[idusersocs], &QTimer::timeout, [this, msg, idusersocs, connectionCount]()
     {
-        //qDebug() << "Таймер отработал " << idusersocs;
         TestTask::Messages::WrapperMessage response;
         response.mutable_slow_response()->set_connected_client_count(connectionCount);
         auto serializedData = serializeDelimited<TestTask::Messages::WrapperMessage>(response);
-        emit readyToWrite(QByteArray(serializedData->data(), serializedData->size()), idusersocs);
+        emit readyToWrite(QByteArray(serializedData->data(), serializedData->size()), idusersocs); 
     });
     timers[idusersocs]->start();
 }
 
 void Server::write(QByteArray msg, int idusersocs)
 {
-    //qDebug() << "send";
-    //qDebug() << msg;
     Sockets[idusersocs]->write(msg);
-    //qDebug() << "sended";
 }
